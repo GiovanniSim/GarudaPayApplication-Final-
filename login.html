@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GarudaPay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="blurred-bg-container">
+    <div>
+    <div class="container">
+        <div class="login-page">
+                <form id="loginForm">
+            <div class='formcontainer'>
+                <div class="logo-wrapper">
+                    <div class="logo">
+                        <img src="logoGarudaPay.jpg" alt="Logo Garuda Pay">
+                        <h1>GarudaPay</h1>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="form-group-warp">
+                    <input type="text" id="username" placeholder="Masukkan username" required>
+                    </div>
+                  </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <div class="form-group-warp">
+                    <input type="email" id="email" placeholder="Masukkan email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="form-group-warp">
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                    </div>
+                </div>
+                <a href="dashboard.html"><button type="submit" class="btn-login" >Login</button></a>
+                <p class="register-link">Belum punya akun? <a href="#" id="registerLink">Registrasi sekarang</a></p>
+            </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const registerLink = document.getElementById('registerLink');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            
+            // Simpan data user ke localStorage
+            const userData = {
+                username: username,
+                email: email,
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('garudapayUser', JSON.stringify(userData));
+            
+            // Redirect ke dashboard
+            window.location.href = 'dashboard.html';
+        });
+
+        registerLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Fitur registrasi akan segera hadir!');
+        });
+
+        // Cek apakah user sudah login
+        window.addEventListener('load', function() {
+            const userData = localStorage.getItem('garudapayUser');
+            if (userData) {
+                // Jika sudah login, langsung ke dashboard
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GarudaPay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard">
+          <div class="header">
+            <div class="user-info">
+              <div class="user-info-space">
+                <img src="pfp.jpg" alt="profile picture" class="avatar" />
+                <div>
+                  <div class="username" id="displayUsername">Username</div>
+                  <div class="phone">+62 342 5634 1767</div>
+                </div>
+              </div>
+              <div class="logout-icon">
+                <a href="index.html"
+                  ><div
+                    style="cursor: pointer; font-size: 24px"
+                    onclick="logout()"
+                    title="Logout"
+                  >
+                    <img src="logout.png" alt="Logout Icon" /></div
+                ></a>
+              </div>
+            </div>
+          </div>    
+                <!-- Multi-Currency Balance Cards Slider -->
+                <div class="balance-slider-container">
+                  <div class="balance-slider" id="balanceSlider">
+                      <!-- IDR Balance Card -->
+                      <div class="balance-card" data-currency="IDR">
+                          <div class="currency-flag">🇮🇩</div>
+                          <div class="balance-label">Saldo Indonesia Rupiah</div>
+                          <div class="balance-amount" id="balanceIDR">Rp 402.920,69</div>
+                          <div class="currency-code">IDR</div>
+                      </div>
+                      
+                      <!-- USD Balance Card -->
+                      <div class="balance-card" data-currency="USD">
+                          <div class="currency-flag">🇺🇸</div>
+                          <div class="balance-label">Saldo United States Dollar</div>
+                          <div class="balance-amount" id="balanceUSD">$ 0.00</div>
+                          <div class="currency-code">USD</div>
+                      </div>
+                      
+                      <!-- MYR Balance Card -->
+                      <div class="balance-card" data-currency="MYR">
+                          <div class="currency-flag">🇲🇾</div>
+                          <div class="balance-label">Saldo Malaysian Ringgit</div>
+                          <div class="balance-amount" id="balanceMYR">RM 0.00</div>
+                          <div class="currency-code">MYR</div>
+                      </div>
+                      
+                      <!-- SGD Balance Card -->
+                      <div class="balance-card" data-currency="SGD">
+                          <div class="currency-flag">🇸🇬</div>
+                          <div class="balance-label">Saldo Singapore Dollar</div>
+                          <div class="balance-amount" id="balanceSGD">S$ 0.00</div>
+                          <div class="currency-code">SGD</div>
+                      </div>
+                      
+                      <!-- CNY Balance Card -->
+                      <div class="balance-card" data-currency="CNY">
+                          <div class="currency-flag">🇨🇳</div>
+                          <div class="balance-label">Saldo Chinese Yuan</div>
+                          <div class="balance-amount" id="balanceCNY">¥ 0.00</div>
+                          <div class="currency-code">CNY</div>
+                      </div>
+                      
+                      <!-- EUR Balance Card -->
+                      <div class="balance-card" data-currency="EUR">
+                          <div class="currency-flag">🇪🇺</div>
+                          <div class="balance-label">Saldo Euro</div>
+                          <div class="balance-amount" id="balanceEUR">€ 0.00</div>
+                          <div class="currency-code">EUR</div>
+                      </div>
+                  </div>
+                  
+                  <!-- Slider Indicators -->
+                  <div class="slider-indicators" id="sliderIndicators">
+                      <span class="indicator active" data-index="0"></span>
+                      <span class="indicator" data-index="1"></span>
+                      <span class="indicator" data-index="2"></span>
+                      <span class="indicator" data-index="3"></span>
+                      <span class="indicator" data-index="4"></span>
+                      <span class="indicator" data-index="5"></span>
+                  </div>
+              </div>
+          
+
+           
+                <div class="menu-container">
+                  <div class="menu-border">
+            <div class="menu-grid">
+                <div class="menu-item" onclick="showSection('qris')">
+                    <div class="menu-icon">📱</div>
+                    <div class="menu-label">Qris</div>
+                </div>
+                <div class="menu-item" onclick="showSection('ewallet')">
+                    <div class="menu-icon">💳</div>
+                    <div class="menu-label">Kirim E-Wallet</div>
+                </div>
+                <div class="menu-item" onclick="showSection('topup')">
+                    <div class="menu-icon">💰</div>
+                    <div class="menu-label">Isi Saldo</div>
+                </div>
+                <div class="menu-item" onclick="showSection('withdraw')">
+                    <div class="menu-icon">🏧</div>
+                    <div class="menu-label">Tarik Tunai</div>
+                </div>
+                <div class="menu-item" onclick="window.location.href='converter.html'">
+                    <div class="menu-icon">💱</div>
+                    <div class="menu-label">Konversi Mata Uang</div>
+                </div>
+                <div class="menu-item" onclick="showSection('bill')">
+                    <div class="menu-icon">📄</div>
+                    <div class="menu-label">Bayar Tagihan</div>
+                </div>
+                <div class="menu-item" onclick="showSection('transfer')">
+                    <div class="menu-icon">🏦</div>
+                    <div class="menu-label">Kirim Ke Bank</div>
+                </div>
+                <div class="menu-item" onclick="showAllFeatures()">
+                    <div class="menu-icon">⋯</div>
+                    <div class="menu-label">Lihat Semua</div>
+                </div>
+            </div>
+          </div>
+            <div class="section-title">Riwayat Transaksi</div>
+            <div class="transaction-list" id="transactionList">
+              
+                <!-- Transactions will be loaded here -->
+              </div>
+            
+
+            <div class="section-title">Kurs Mata Uang</div>
+            <div class="currency-section">
+                <div class="currency-grid">
+                  <div class="currency-card-border">
+                    <div class="currency-card">
+                        <div class="currency-code">USD</div>
+                        <div class="currency-rates">
+                            <div class="currency-rate">
+                                <span>Beli:</span>
+                                <span>16,615.00</span>
+                            </div>
+                            <div class="currency-rate">
+                                <span>Jual:</span>
+                                <span>16,675.00</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="currency-card-border">
+                    <div class="currency-card">
+                        <div class="currency-code">SGD</div>
+                        <div class="currency-rates">
+                            <div class="currency-rate">
+                                <span>Beli:</span>
+                                <span>12,799.36</span>
+                            </div>
+                            <div class="currency-rate">
+                                <span>Jual:</span>
+                                <span>12,863.88</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="currency-card-border">
+                    <div class="currency-card">
+                        <div class="currency-code">CNY</div>
+                        <div class="currency-rates">
+                            <div class="currency-rate">
+                                <span>Beli:</span>
+                                <span>2,344.25</span>
+                            </div>
+                            <div class="currency-rate">
+                                <span>Jual:</span>
+                                <span>2,364.89</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="currency-card-border">
+                    <div class="currency-card">
+                        <div class="currency-code">EUR</div>
+                        <div class="currency-rates">
+                            <div class="currency-rate">
+                                <span>Beli:</span>
+                                <span>19,221.69</span>
+                            </div>
+                            <div class="currency-rate">
+                                <span>Jual:</span>
+                                <span>19,302.04</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="conversion-border">
+                <div class="conversion-options">
+                    <div class="conversion-title">Konversi Mata Uang</div>
+                    <div class="conversion-btn-border">
+                    <button class="conversion-btn" onclick="window.location.href='converter.html'">Buka Halaman Konversi</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+    <script>
+        // Multi-currency balances object
+        let balances = {
+            IDR: 402920.69,
+            USD: 0,
+            MYR: 0,
+            SGD: 0,
+            CNY: 0,
+            EUR: 0
+        };
+
+        // Currency symbols
+        const currencySymbols = {
+            IDR: 'Rp ',
+            USD: '$ ',
+            MYR: 'RM ',
+            SGD: 'S$ ',
+            CNY: '¥ ',
+            EUR: '€ '
+        };
+
+        // Slider functionality
+        let currentSlide = 0;
+        const slider = document.getElementById('balanceSlider');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalSlides = 6;
+
+        function goToSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            
+            currentSlide = index;
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === index);
+            });
+        }
+
+        // Touch/swipe functionality for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+
+        slider.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            isDragging = true;
+        }, { passive: true });
+
+        slider.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            touchEndX = e.touches[0].clientX;
+        }, { passive: true });
+
+        slider.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = touchStartX - touchEndX;
+            
+            // Minimum swipe distance
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    // Swipe left - go to next slide
+                    goToSlide(currentSlide + 1);
+                } else {
+                    // Swipe right - go to previous slide
+                    goToSlide(currentSlide - 1);
+                }
+            }
+        });
+
+        // Mouse drag functionality for desktop
+        let mouseStartX = 0;
+        let mouseEndX = 0;
+        let isMouseDragging = false;
+
+        slider.addEventListener('mousedown', (e) => {
+            mouseStartX = e.clientX;
+            isMouseDragging = true;
+            slider.style.cursor = 'grabbing';
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isMouseDragging) return;
+            mouseEndX = e.clientX;
+        });
+
+        slider.addEventListener('mouseup', () => {
+            if (!isMouseDragging) return;
+            isMouseDragging = false;
+            slider.style.cursor = 'grab';
+            
+            const diff = mouseStartX - mouseEndX;
+            
+            // Minimum drag distance
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    // Drag left - go to next slide
+                    goToSlide(currentSlide + 1);
+                } else {
+                    // Drag right - go to previous slide
+                    goToSlide(currentSlide - 1);
+                }
+            }
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            if (isMouseDragging) {
+                isMouseDragging = false;
+                slider.style.cursor = 'grab';
+            }
+        });
+
+        // Click indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                goToSlide(index);
+            });
+        });
+
+        // Keyboard navigation (optional)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                goToSlide(currentSlide - 1);
+            } else if (e.key === 'ArrowRight') {
+                goToSlide(currentSlide + 1);
+            }
+        });
+
+        // Load and display balances
+        function loadBalances() {
+            const savedBalances = localStorage.getItem('garudapayBalances');
+            if (savedBalances) {
+                balances = JSON.parse(savedBalances);
+            } else {
+                // Set default balances
+                localStorage.setItem('garudapayBalances', JSON.stringify(balances));
+            }
+            
+            updateBalanceDisplay();
+        }
+
+        function updateBalanceDisplay() {
+            Object.keys(balances).forEach(currency => {
+                const element = document.getElementById(`balance${currency}`);
+                if (element) {
+                    element.textContent = currencySymbols[currency] + 
+                        balances[currency].toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                }
+            });
+        }
+
+        // Load transactions
+        function loadTransactions() {
+            const savedTransactions = localStorage.getItem('garudapayTransactions');
+            const transactionList = document.getElementById('transactionList');
+            
+            if (savedTransactions) {
+                const transactions = JSON.parse(savedTransactions);
+                transactionList.innerHTML = '';
+                
+                // Show last 5 transactions
+                transactions.slice(-5).reverse().forEach(tx => {
+                    const txElement = document.createElement('div');
+                    txElement.className = 'transaction-item';
+                    txElement.innerHTML = `
+                        <div class="transaction-info">
+                            <h4>${tx.type}</h4>
+                            <p>${tx.details}</p>
+                        </div>
+                        <div class="transaction-amount ${tx.amount > 0 ? 'positive' : 'negative'}">
+                            ${tx.amount > 0 ? '+' : ''}${tx.currency} ${Math.abs(tx.amount).toFixed(2)}
+                        </div>
+                    `;
+                    transactionList.appendChild(txElement);
+                });
+            } else {
+                // Default transactions
+                transactionList.innerHTML = `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <h4>Saldo Awal</h4>
+                            <p>Indonesia Rupiah</p>
+                        </div>
+                        <div class="transaction-amount positive">+Rp 402.920,69</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            const userData = localStorage.getItem('garudapayUser');
+            
+            if (!userData) {
+                window.location.href = 'login.html';
+            } else {
+                const user = JSON.parse(userData);
+                document.getElementById('displayUsername').textContent = user.username;
+                
+                loadBalances();
+                loadTransactions();
+            }
+        });
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                localStorage.removeItem('garudapayUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function showSection(section) {
+            const sectionNames = {
+                'qris': 'QRIS Payment',
+                'ewallet': 'Kirim E-Wallet',
+                'topup': 'Isi Saldo',
+                'withdraw': 'Tarik Tunai',
+                'bill': 'Bayar Tagihan',
+                'transfer': 'Kirim Ke Bank'
+            };
+            
+            alert('Membuka fitur: ' + sectionNames[section]);
+        }
+
+        function showAllFeatures() {
+            alert('Menampilkan semua fitur GarudaPay...');
+        }
+    </script>
+</body>
+</html>

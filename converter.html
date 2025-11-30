@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konversi Mata Uang - GarudaPay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="converter-page">
+            <!-- Header -->
+            <div class="converter-header">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <h2>Konversi Mata Uang</h2>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <!-- Conversion Result Display -->
+            <div class="conversion-display">
+                <div class="conversion-info">
+                    <span class="info-label" id="conversionLabel">1 Indonesian Rupiah equals</span>
+                    <h1 class="conversion-result" id="conversionResult">0.000060 United States Dollar</h1>
+                    <p class="update-time" id="updateTime">30 Nov, 08:58 UTC · From Morningstar · Disclaimer</p>
+                </div>
+
+                <!-- Currency Selector Cards -->
+                <div class="currency-selector-card from-currency">
+                    <div class="currency-badge" id="fromCurrencyBadge">1</div>
+                    <div class="currency-selector" onclick="openCurrencyModal('from')">
+                        <span class="currency-name" id="fromCurrency">Indonesia Rupiah</span>
+                        <span class="arrow-down">▼</span>
+                    </div>
+                </div>
+
+                <div class="swap-button" onclick="swapCurrencies()">
+                    <span>⇅</span>
+                </div>
+
+                <div class="currency-selector-card to-currency">
+                    <input type="number" class="currency-amount" id="conversionAmount" value="0.000060" step="any" readonly>
+                    <div class="currency-selector" onclick="openCurrencyModal('to')">
+                        <span class="currency-name" id="toCurrency">United States Dollar</span>
+                        <span class="arrow-down">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amount Input Section -->
+            <div class="amount-input-section">
+                <label class="input-label">Jumlah yang ingin dikonversi</label>
+                <div class="amount-input-wrapper">
+                    <input type="number" class="amount-input" id="amountInput" placeholder="0" step="any" oninput="calculateConversion()">
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="submit-btn" onclick="confirmConversion()">
+                Submit
+            </button>
+
+            <!-- Balance Display -->
+            <div class="balance-display">
+                <div class="balance-item">
+                    <span class="balance-label">Saldo <span id="fromCurrencyLabel">IDR</span>:</span>
+                    <span class="balance-value" id="fromBalance">Rp 0.00</span>
+                </div>
+                <div class="balance-item">
+                    <span class="balance-label">Saldo <span id="toCurrencyLabel">USD</span> Setelah Konversi:</span>
+                    <span class="balance-value" id="toBalance">$ 0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Currency Selection Modal -->
+    <div class="modal" id="currencyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pilih Mata Uang</h3>
+                <button class="close-btn" onclick="closeCurrencyModal()">×</button>
+            </div>
+            <div class="currency-list">
+                <div class="currency-item" onclick="selectCurrency('IDR', 'Indonesia Rupiah')">
+                    <span class="currency-flag">🇮🇩</span>
+                    <div class="currency-details">
+                        <span class="currency-code">IDR</span>
+                        <span class="currency-full-name">Indonesia Rupiah</span>
+                    </div>
+                </div>
+                <div class="currency-item" onclick="selectCurrency('USD', 'United States Dollar')">
+                    <span class="currency-flag">🇺🇸</span>
+                    <div class="currency-details">
+                        <span class="currency-code">USD</span>
+                        <span class="currency-full-name">United States Dollar</span>
+                    </div>
+                </div>
+                <div class="currency-item" onclick="selectCurrency('MYR', 'Malaysian Ringgit')">
+                    <span class="currency-flag">🇲🇾</span>
+                    <div class="currency-details">
+                        <span class="currency-code">MYR</span>
+                        <span class="currency-full-name">Malaysian Ringgit</span>
+                    </div>
+                </div>
+                <div class="currency-item" onclick="selectCurrency('SGD', 'Singapore Dollar')">
+                    <span class="currency-flag">🇸🇬</span>
+                    <div class="currency-details">
+                        <span class="currency-code">SGD</span>
+                        <span class="currency-full-name">Singapore Dollar</span>
+                    </div>
+                </div>
+                <div class="currency-item" onclick="selectCurrency('CNY', 'Chinese Yuan')">
+                    <span class="currency-flag">🇨🇳</span>
+                    <div class="currency-details">
+                        <span class="currency-code">CNY</span>
+                        <span class="currency-full-name">Chinese Yuan</span>
+                    </div>
+                </div>
+                <div class="currency-item" onclick="selectCurrency('EUR', 'Euro')">
+                    <span class="currency-flag">🇪🇺</span>
+                    <div class="currency-details">
+                        <span class="currency-code">EUR</span>
+                        <span class="currency-full-name">Euro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exchange rates (relative to IDR)
+        const exchangeRates = {
+            'IDR': 1,
+            'USD': 0.000060,
+            'MYR': 0.000275,
+            'SGD': 0.000078,
+            'CNY': 0.000426,
+            'EUR': 0.000052
+        };
+
+        // Currency symbols
+        const currencySymbols = {
+            'IDR': 'Rp ',
+            'USD': '$ ',
+            'MYR': 'RM ',
+            'SGD': 'S$ ',
+            'CNY': '¥ ',
+            'EUR': '€ '
+        };
+
+        let balances = {
+            IDR: 0,
+            USD: 0,
+            MYR: 0,
+            SGD: 0,
+            CNY: 0,
+            EUR: 0
+        };
+
+        let selectedFromCurrency = { code: 'IDR', name: 'Indonesia Rupiah' };
+        let selectedToCurrency = { code: 'USD', name: 'United States Dollar' };
+        let modalTarget = '';
+
+        // Initialize
+        window.addEventListener('load', function() {
+            const userData = localStorage.getItem('garudapayUser');
+            if (!userData) {
+                window.location.href = 'login.html';
+            }
+            
+            // Load balances
+            const savedBalances = localStorage.getItem('garudapayBalances');
+            if (savedBalances) {
+                balances = JSON.parse(savedBalances);
+            }
+            
+            updateDisplay();
+            updateBalanceDisplay();
+        });
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function openCurrencyModal(target) {
+            modalTarget = target;
+            document.getElementById('currencyModal').style.display = 'flex';
+        }
+
+        function closeCurrencyModal() {
+            document.getElementById('currencyModal').style.display = 'none';
+        }
+
+        function selectCurrency(code, name) {
+            if (modalTarget === 'from') {
+                selectedFromCurrency = { code, name };
+                document.getElementById('fromCurrency').textContent = name;
+                document.getElementById('fromCurrencyLabel').textContent = code;
+            } else {
+                selectedToCurrency = { code, name };
+                document.getElementById('toCurrency').textContent = name;
+                document.getElementById('toCurrencyLabel').textContent = code;
+            }
+            closeCurrencyModal();
+            updateDisplay();
+            updateBalanceDisplay();
+            calculateConversion();
+        }
+
+        function swapCurrencies() {
+            const temp = selectedFromCurrency;
+            selectedFromCurrency = selectedToCurrency;
+            selectedToCurrency = temp;
+            
+            document.getElementById('fromCurrency').textContent = selectedFromCurrency.name;
+            document.getElementById('toCurrency').textContent = selectedToCurrency.name;
+            document.getElementById('fromCurrencyLabel').textContent = selectedFromCurrency.code;
+            document.getElementById('toCurrencyLabel').textContent = selectedToCurrency.code;
+            
+            updateDisplay();
+            updateBalanceDisplay();
+            calculateConversion();
+        }
+
+        function updateDisplay() {
+            const rate = (exchangeRates[selectedToCurrency.code] / exchangeRates[selectedFromCurrency.code]);
+            
+            document.getElementById('conversionLabel').textContent = 
+                `1 ${selectedFromCurrency.name} equals`;
+            document.getElementById('conversionResult').textContent = 
+                `${rate.toFixed(6)} ${selectedToCurrency.name}`;
+            
+            const now = new Date();
+            document.getElementById('updateTime').textContent = 
+                `${now.getDate()} Nov, ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')} UTC · From Morningstar · Disclaimer`;
+            
+            document.getElementById('conversionAmount').value = rate.toFixed(6);
+        }
+
+        function updateBalanceDisplay() {
+            // Display FROM currency balance
+            document.getElementById('fromBalance').textContent = 
+                currencySymbols[selectedFromCurrency.code] + 
+                balances[selectedFromCurrency.code].toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // Display TO currency balance (current)
+            document.getElementById('toBalance').textContent = 
+                currencySymbols[selectedToCurrency.code] + 
+                balances[selectedToCurrency.code].toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function calculateConversion() {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            const rate = (exchangeRates[selectedToCurrency.code] / exchangeRates[selectedFromCurrency.code]);
+            const result = amount * rate;
+            
+            document.getElementById('conversionAmount').value = result.toFixed(6);
+            
+            // Update preview of TO balance after conversion
+            const newToBalance = balances[selectedToCurrency.code] + result;
+            document.getElementById('toBalance').textContent = 
+                currencySymbols[selectedToCurrency.code] + 
+                newToBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function confirmConversion() {
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            
+            if (!amount || amount <= 0) {
+                alert('Masukkan jumlah yang valid!');
+                return;
+            }
+            
+            // Check if FROM balance is sufficient
+            if (balances[selectedFromCurrency.code] < amount) {
+                alert(`Saldo ${selectedFromCurrency.code} tidak mencukupi!\n\nSaldo Anda: ${currencySymbols[selectedFromCurrency.code]}${balances[selectedFromCurrency.code].toFixed(2)}\nYang diperlukan: ${currencySymbols[selectedFromCurrency.code]}${amount.toFixed(2)}`);
+                return;
+            }
+            
+            const rate = (exchangeRates[selectedToCurrency.code] / exchangeRates[selectedFromCurrency.code]);
+            const result = amount * rate;
+            
+            const confirmation = confirm(
+                `Konfirmasi Konversi:\n\n` +
+                `Dari: ${amount.toFixed(2)} ${selectedFromCurrency.code}\n` +
+                `Ke: ${result.toFixed(2)} ${selectedToCurrency.code}\n\n` +
+                `Saldo ${selectedFromCurrency.code} akan berkurang: ${currencySymbols[selectedFromCurrency.code]}${amount.toFixed(2)}\n` +
+                `Saldo ${selectedToCurrency.code} akan bertambah: ${currencySymbols[selectedToCurrency.code]}${result.toFixed(2)}\n\n` +
+                `Apakah Anda yakin?`
+            );
+            
+            if (confirmation) {
+                // Deduct from FROM currency
+                balances[selectedFromCurrency.code] -= amount;
+                
+                // Add to TO currency
+                balances[selectedToCurrency.code] += result;
+                
+                // Save balances
+                localStorage.setItem('garudapayBalances', JSON.stringify(balances));
+                
+                // Save transaction
+                saveTransaction(amount, result);
+                
+                alert(
+                    'Konversi berhasil! ✅\n\n' +
+                    `${amount.toFixed(2)} ${selectedFromCurrency.code} → ${result.toFixed(2)} ${selectedToCurrency.code}\n\n` +
+                    `Saldo ${selectedFromCurrency.code}: ${currencySymbols[selectedFromCurrency.code]}${balances[selectedFromCurrency.code].toFixed(2)}\n` +
+                    `Saldo ${selectedToCurrency.code}: ${currencySymbols[selectedToCurrency.code]}${balances[selectedToCurrency.code].toFixed(2)}`
+                );
+                
+                // Reset form
+                document.getElementById('amountInput').value = '';
+                updateBalanceDisplay();
+                calculateConversion();
+            }
+        }
+
+        function saveTransaction(amount, result) {
+            const transactions = JSON.parse(localStorage.getItem('garudapayTransactions') || '[]');
+            
+            const newTransaction = {
+                type: 'Konversi Mata Uang',
+                details: `${amount.toFixed(2)} ${selectedFromCurrency.code} → ${result.toFixed(2)} ${selectedToCurrency.code}`,
+                amount: result,
+                currency: currencySymbols[selectedToCurrency.code],
+                date: new Date().toISOString()
+            };
+            
+            transactions.push(newTransaction);
+            localStorage.setItem('garudapayTransactions', JSON.stringify(transactions));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - GarudaPay</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blurred-bg-container">
+      <div class="container">
+        <div class="dashboard">
+          <div class="header">
+            <div class="user-info">
+              <div class="user-info-space">
+                <img src="pfp.jpg" alt="profile picture" class="avatar" />
+                <div>
+                  <div class="username" id="displayUsername">Username</div>
+                  <div class="phone">+62 342 5634 1767</div>
+                </div>
+              </div>
+              <div class="logout-icon">
+                <a href="index.html"
+                  ><div
+                    style="cursor: pointer; font-size: 24px"
+                    onclick="logout()"
+                    title="Logout"
+                  >
+                    <img src="logout.png" alt="Logout Icon" /></div
+                ></a>
+              </div>
+            </div>
+          </div>
+            <!-- kurs mata uang -->
+            <div class="section-title">Kurs Mata Uang</div>
+            <div>
+            <div class="currency-section">
+              <div class="currency-grid">
+                <div class="currency-card-border">
+                <div class="currency-card">
+                  <div class="currency-code">USD</div>
+                  <div class="currency-rates">
+                    <div class="currency-rate">
+                      <span>Beli:</span>
+                      <span>16,615.00</span>
+                    </div>
+                    <div class="currency-rate">
+                      <span>Jual:</span>
+                      <span>16,675.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="currency-card-border">
+                <div class="currency-card">
+                  <div class="currency-code">SGD</div>
+                  <div class="currency-rates">
+                    <div class="currency-rate">
+                      <span>Beli:</span>
+                      <span>12,799.36</span>
+                    </div>
+                    <div class="currency-rate">
+                      <span>Jual:</span>
+                      <span>12,863.88</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="currency-card-border">
+                <div class="currency-card">
+                  <div class="currency-code">CNY</div>
+                  <div class="currency-rates">
+                    <div class="currency-rate">
+                      <span>Beli:</span>
+                      <span>2,344.25</span>
+                    </div>
+                    <div class="currency-rate">
+                      <span>Jual:</span>
+                      <span>2,364.89</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="currency-card-border">
+                <div class="currency-card">
+                  <div class="currency-code">EUR</div>
+                  <div class="currency-rates">
+                    <div class="currency-rate">
+                      <span>Beli:</span>
+                      <span>19,221.69</span>
+                    </div>
+                    <div class="currency-rate">
+                      <span>Jual:</span>
+                      <span>19,302.04</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+
+            <!-- Konversi Mata Uang -->
+            <div class="conversion-options">
+              <div class="conversion-title">Konversi Mata Uang</div>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('Rupiah TO USD')"
+              >
+                Rupiah TO USD
+              </button>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('Rupiah TO SGD')"
+              >
+                Rupiah TO SGD
+              </button>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('Rupiah TO CNY')"
+              >
+                Rupiah TO CNY
+              </button>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('Rupiah TO EUR')"
+              >
+                Rupiah TO EUR
+              </button>
+              <div style="height: 15px"></div>
+              <a href="sistemtukarmatauang.html"><button
+                class="conversion-btn"
+                onclick="convertCurrency('USD TO Rupiah')"
+              >
+                USD TO Rupiah
+              </button> </a>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('SGD TO Rupiah')"
+              >
+                SGD TO Rupiah
+              </button>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('CNY TO Rupiah')"
+              >
+                CNY TO Rupiah
+              </button>
+              <button
+                class="conversion-btn"
+                onclick="convertCurrency('EUR TO Rupiah')"
+              >
+                EUR TO Rupiah
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+    <script>
+      // Cek apakah user sudah login
+      window.addEventListener('load', function () {
+        const userData = localStorage.getItem('garudapayUser');
+
+        if (!userData) {
+          // Jika belum login, redirect ke login page
+          window.location.href = 'login.html';
+        } else {
+          // Tampilkan username
+          const user = JSON.parse(userData);
+          document.getElementById('displayUsername').textContent =
+            user.username;
+        }
+      });
+
+      function logout() {
+        if (confirm('Apakah Anda yakin ingin logout?')) {
+          // Hapus data user dari localStorage
+          localStorage.removeItem('garudapayUser');
+
+          // Redirect ke login page
+          window.location.href = 'login.html';
+        }
+      }
+
+      function showSection(section) {
+        const sectionNames = {
+          qris: 'QRIS Payment',
+          ewallet: 'Kirim E-Wallet',
+          topup: 'Isi Saldo',
+          withdraw: 'Tarik Tunai',
+          currency: 'Konversi Mata Uang',
+          bill: 'Bayar Tagihan',
+          transfer: 'Kirim Ke Bank',
+        };
+
+        alert('Membuka fitur: ' + sectionNames[section]);
+      }
+
+      function showAllFeatures() {
+        alert('Menampilkan semua fitur GarudaPay...');
+      }
+
+      function convertCurrency(type) {
+        alert('Memproses konversi: ' + type);
+      }
+    </script>
+  </body>
+</html>
